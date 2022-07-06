@@ -1,14 +1,19 @@
 package com.epam.jconference.service;
 
-import com.epam.jconference.service.model.User;
-import com.epam.jconference.controller.dto.UserDto;
-import com.epam.jconference.service.mapper.UserMapper;
-import org.springframework.stereotype.Service;
+import com.epam.jconference.dto.UserDto;
+import com.epam.jconference.model.User;
+import org.springframework.http.ResponseEntity;
 
-@Service
-public class UserService {
-    public UserDto create(UserDto userDto){
-        User user = UserMapper.INSTANCE.mapUser(userDto);
-        return userDto;
-    }
+public interface UserService {
+    UserDto create(UserDto user);
+
+    UserDto login(UserDto user);
+
+    UserDto update(UserDto userDto);
+
+    ResponseEntity<Void> logout();
+
+    UserDto profile();
+
+    UserDto getById(Long id);
 }

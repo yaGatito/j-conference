@@ -1,42 +1,50 @@
 package com.epam.jconference.controller;
 
-import com.epam.jconference.controller.dto.UserDto;
-import com.epam.jconference.service.UserService;
+import com.epam.jconference.api.UserApi;
+import com.epam.jconference.controller.assembler.UserAssembler;
+import com.epam.jconference.controller.model.UserModel;
+import com.epam.jconference.dto.LectureDto;
+import com.epam.jconference.dto.UserDto;
+import com.epam.jconference.dto.group.OnCreate;
+import com.epam.jconference.dto.group.OnLogin;
+import com.epam.jconference.service.impl.UserServiceImpl;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
-public class UserController {
+@RequiredArgsConstructor
+public class UserController implements UserApi {
 
-    private UserService userService;
+    private final UserServiceImpl userService;
 
-    @Autowired
-    public UserController(UserService userService) {
-        this.userService = userService;
+    private final UserAssembler userAssembler;
+
+    public UserModel create(UserDto userDto) {
+        return userAssembler.toModel(userService.create(userDto));
     }
 
-    @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/users/registration")
-    public UserDto registration(@RequestBody UserDto userDto) {
-        return userService.create(userDto);
+    public UserModel update(UserDto userDto) {
+        return userAssembler.toModel(userService.update(userDto));
     }
 
-    @PostMapping("/users/login")
-    public Boolean login(@RequestBody UserDto userDto) {
+    public UserModel getById(Long id) {
         return null;
     }
 
-    @PostMapping("/users/logout")
-    public Boolean logout() {
-        return null;
+    public UserModel login(UserDto userDto) {
+        return userAssembler.toModel(userService.login(userDto));
     }
 
-    @GetMapping("/users/profile")
-    public UserDto profile() {
-        return null;
+    public ResponseEntity<Void> logout() {
+        return userService.logout();
     }
 
+    public UserModel profile() {
+        return userAssembler.toModel(userService.profile());
+    }
 }

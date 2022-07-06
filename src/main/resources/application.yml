@@ -1,2 +1,20 @@
 server:
   port: 8078
+management:
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+info:
+  app:
+    name: jConference Spring Boot application
+    description: This application is designed to help manage events.
+    version: 1.0.0
+  system:
+    os: ${os.name}
+    PID: ${PID}
+    user-country: ${user.country}
+    user-timzone: ${user.timezone}

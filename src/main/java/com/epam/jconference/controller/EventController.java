@@ -1,50 +1,70 @@
 package com.epam.jconference.controller;
 
-import com.epam.jconference.service.model.Event;
-import com.epam.jconference.controller.dto.EventDto;
-import com.epam.jconference.controller.dto.EventFilterDto;
+import com.epam.jconference.api.EventApi;
+import com.epam.jconference.dto.group.OnCreate;
+import com.epam.jconference.dto.group.OnUpdate;
+import com.epam.jconference.dto.EventDto;
+import com.epam.jconference.dto.EventFilterDto;
+import com.epam.jconference.service.EventService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Slf4j
 @RestController
-public class EventController {
+@RequiredArgsConstructor
+public class EventController implements EventApi {
+
+    private final EventService eventService;
+
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/events")
-    public EventDto create(@RequestBody EventDto eventDto){
-        return null;
+    @PostMapping
+    public EventDto create(@RequestBody @Validated(OnCreate.class) EventDto eventDto) {
+        return eventService.create(eventDto);
     }
 
-    @GetMapping("/events")
-    public List<EventDto> findAll(@RequestBody EventFilterDto eventFilter){
-        return null;
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping
+    public List<EventDto> getAll(@RequestBody @Valid EventFilterDto eventFilter) {
+        return eventService.getAll(eventFilter);
     }
 
-    @GetMapping("/events/{id}")
-    public EventDto findById(@PathVariable Long id){
-        return null;
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping(value = "/{id}")
+    public EventDto getById(@PathVariable Long id) {
+        return eventService.getById(id);
     }
 
-    @PatchMapping("/events")
-    public EventDto update(@RequestBody EventDto eventDto){
-        return null;
+    @ResponseStatus(HttpStatus.OK)
+    @PatchMapping
+    public EventDto update(@RequestBody @Validated(OnUpdate.class) EventDto eventDto) {
+        return eventService.update(eventDto);
     }
 
-    @DeleteMapping("/events")
-    public EventDto delete(@RequestBody EventDto eventDto){
-        return null;
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteById(@PathVariable Long id) {
+        return eventService.deleteById(id);
     }
 
-    @PatchMapping("/events/{id}")
-    public EventDto deleteById(@PathVariable Long id){
-        return null;
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping(value = "/participation")
+    public List<EventDto> participation() {
+        return eventService.participation();
     }
 
-    @GetMapping("/events/participation")
-    public List<Event> participation(){
-        return null;
+    @PostMapping("/join/{eventId}")
+    public ResponseEntity<Void> join(@PathVariable Long eventId) {
+        return eventService.join(eventId);
+    }
+
+    @PostMapping("/leave/{eventId}")
+    public ResponseEntity<Void> leave(@PathVariable Long eventId) {
+        return eventService.leave(eventId);
     }
 }
