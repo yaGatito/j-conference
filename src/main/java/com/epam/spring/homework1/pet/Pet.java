@@ -8,7 +8,6 @@ import java.util.List;
 
 @Component
 public class Pet {
-
     private List<Animal> animals;
 
     @Autowired
@@ -16,9 +15,7 @@ public class Pet {
         this.animals = animals;
     }
 
-    public void printPets(){
-        for (Animal animal : animals) {
-            System.out.println(animal.getClass().getSimpleName());
-        }
+    public void printPets() {
+        animals.forEach(animal -> System.out.println(animal.getClass().getSimpleName()));
     }
 }
