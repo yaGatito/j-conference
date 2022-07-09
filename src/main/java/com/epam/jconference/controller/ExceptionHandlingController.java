@@ -48,9 +48,9 @@ public class ExceptionHandlingController {
         return new Error(ex.getMessage(), ErrorType.UNAUTHORIZED_ACCESS_ERROR_TYPE, LocalDateTime.now());
     }
 
-    @ExceptionHandler(IndexOutOfBoundsException.class)
+    @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public Error handleException(NullPointerException ex) {
+    public Error handleException(Exception ex) {
         log.error("handleException: exception {}", ex.getMessage(), ex);
         return new Error(ex.getMessage(), ErrorType.FATAL_ERROR_TYPE, LocalDateTime.now());
     }
