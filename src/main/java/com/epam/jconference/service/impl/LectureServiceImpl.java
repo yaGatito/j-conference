@@ -114,53 +114,72 @@ public class LectureServiceImpl implements LectureService {
     @Override
     public LectureDto applyFreeLecture(Long lectureId) {
         session.isLogged();
-        Lecture persistedLecture = mapper.mapToEntity(getById(lectureId));
-        if (!persistedLecture.getStatus().equals(LectureStatus.FREE)) {
-            throw new InvalidOperationException("Lecture should be free to choose");
-        }
+        Lecture persistedLecture = checkThenGet(lectureId, LectureStatus.FREE);
         Long speakerId = session.getUser().getId();
         requestManagementRepository.applyOnFreeLecture(speakerId, lectureId);
         return mapper.mapToDto(persistedLecture);
     }
 
     @Override
-    public LectureDto rejectRequest(Long requestId) {
-        return null;
+    public List<LectureDto> getRequests() {
+        session.isLogged();
+        User sessionUser = session.getUser();
+        return lectureRepository.findAllByStatusAndSpeaker(LectureStatus.REQUEST, sessionUser).stream().map(mapper::mapToDto).collect(Collectors.toList());
     }
 
     @Override
-    public List<LectureDto> getRequests() {
-        return null;
+    public LectureDto rejectRequest(Long requestId) {
+        Lecture persistedLecture = checkThenGet(requestId, LectureStatus.REQUEST);
+        persistedLecture.setStatus(LectureStatus.REJECTED);
+        return mapper.mapToDto(lectureRepository.save(persistedLecture));
     }
 
     @Override
     public LectureDto acceptRequest(Long requestId) {
-        return null;
+        Lecture persistedLecture = checkThenGet(requestId, LectureStatus.REQUEST);
+        persistedLecture.setStatus(LectureStatus.SECURED);
+        return mapper.mapToDto(lectureRepository.save(persistedLecture));
     }
 
     @Override
     public LectureDto addRequest(LectureDto lectureDto) {
-        return null;
+        session.isLogged();
+        User sessionUser = session.getUser();
+        lectureDto.setStatus(LectureStatus.REQUEST);
+        lectureDto.setSpeaker(sessionUser);
+        return mapper.mapToDto(lectureRepository.save(mapper.mapToEntity(lectureDto)));
     }
 
     @Override
     public List<LectureDto> getSecuredLectures() {
-        return null;
+        session.isLogged();
+        User sessionUser = session.getUser();
+        return lectureRepository.findAllByStatusAndSpeaker(LectureStatus.SECURED, sessionUser).stream().map(mapper::mapToDto).collect(Collectors.toList());
     }
 
     @Override
     public List<LectureDto> getOffers() {
-        return null;
+        session.isLogged();
+        User sessionUser = session.getUser();
+        return lectureRepository.findAllByStatusAndSpeaker(LectureStatus.OFFER, sessionUser).stream().map(mapper::mapToDto).collect(Collectors.toList());
     }
 
     @Override
     public LectureDto acceptOffer(Long lectureId) {
-        return null;
+        session.isLogged();
+        User sessionUser = session.getUser();
+        Lecture persistedLecture = checkThenGet(lectureId, LectureStatus.OFFER, sessionUser.getId());
+        persistedLecture.setStatus(LectureStatus.SECURED);
+        return mapper.mapToDto(lectureRepository.save(persistedLecture));
     }
 
     @Override
     public LectureDto declineOffer(Long lectureId) {
-        return null;
+        session.isLogged();
+        User sessionUser = session.getUser();
+        Lecture persistedLecture = checkThenGet(lectureId, LectureStatus.OFFER, sessionUser.getId());
+        persistedLecture.setStatus(LectureStatus.REJECTED);
+        return mapper.mapToDto(lectureRepository.save(persistedLecture));
     }
 
 
@@ -172,5 +191,24 @@ public class LectureServiceImpl implements LectureService {
     @Override
     public List<LectureDto> moderHistory() {
         return null;
+    }
+
+    private Lecture checkThenGet(Long lectureId, LectureStatus status) {
+        if (!lectureRepository.existsById(lectureId)) {
+            throw new EntityNotFoundException("Lecture with id:" + lectureId + " doesn't exist");
+        }
+        Lecture persistedLecture = lectureRepository.getById(lectureId);
+        if (!persistedLecture.getStatus().equals(status)) {
+            throw new InvalidOperationException("Lecture must be with status:" + status);
+        }
+        return persistedLecture;
+    }
+
+    private Lecture checkThenGet(Long lectureId, LectureStatus status, Long speakerId) {
+        Lecture persistedLecture = checkThenGet(lectureId, status);
+        if (!persistedLecture.getSpeaker().getId().equals(speakerId)) {
+            throw new InvalidOperationException("User haven't access to this lecture");
+        }
+        return persistedLecture;
     }
 }
