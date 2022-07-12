@@ -1,5 +1,22 @@
 server:
   port: 8078
+
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    name: jConferenceDB
+    username: spring_conference_user
+    password: root
+    url: jdbc:postgresql://localhost:5432/jconferences
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    database: postgresql
+#  jackson:
+#    serialization:
+#      fail-on-empty-beans: false
+
 management:
   endpoint:
     health:
@@ -8,6 +25,7 @@ management:
     web:
       exposure:
         include: '*'
+
 info:
   app:
     name: jConference Spring Boot application
