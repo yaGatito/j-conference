@@ -1,7 +1,8 @@
 package com.epam.jconference.controller.dto;
 
 import com.epam.jconference.service.model.enums.UserRole;
-import lombok.*;
+import lombok.Data;
+import lombok.NonNull;
 
 @Data
 public class UserDto {

@@ -1,8 +1,8 @@
 package com.epam.jconference.controller.dto;
 
 import com.epam.jconference.service.model.Event;
-import com.epam.jconference.service.model.enums.LectureStatus;
 import com.epam.jconference.service.model.User;
+import com.epam.jconference.service.model.enums.LectureStatus;
 import lombok.Data;
 
 @Data

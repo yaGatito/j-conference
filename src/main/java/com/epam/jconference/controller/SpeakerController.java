@@ -10,27 +10,27 @@ import org.springframework.web.bind.annotation.RestController;
 public class SpeakerController {
 
     @GetMapping("/lectures/speaker/offers")
-    public LectureDto offeredLectures(){
+    public LectureDto offeredLectures() {
         return null;
     }
 
     @GetMapping("/lectures/speaker/requests")
-    public LectureDto requestedLectures(){
+    public LectureDto requestedLectures() {
         return null;
     }
 
     @GetMapping("/lectures/speaker/secured")
-    public LectureDto securedLectures(){
+    public LectureDto securedLectures() {
         return null;
     }
 
     @GetMapping("/lectures/speaker/free")
-    public LectureDto freeLectures(){
+    public LectureDto freeLectures() {
         return null;
     }
 
     @GetMapping("/lectures/speaker/history")
-    public LectureDto history(){
+    public LectureDto history() {
         return null;
     }
 }

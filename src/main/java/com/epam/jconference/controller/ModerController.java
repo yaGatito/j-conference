@@ -10,23 +10,22 @@ import org.springframework.web.bind.annotation.RestController;
 public class ModerController {
 
     @GetMapping("/lectures/moder/requests")
-    public LectureDto requestsModer(){
+    public LectureDto requestsModer() {
         return null;
     }
 
     @GetMapping("/lectures/moder/secured")
-    public LectureDto securedModer(){
+    public LectureDto securedModer() {
         return null;
     }
 
     @GetMapping("/lectures/moder/free")
-    public LectureDto freeLectures(){
+    public LectureDto freeLectures() {
         return null;
     }
 
     @GetMapping("/lectures/moder/history")
-    public LectureDto history(){
+    public LectureDto history() {
         return null;
     }
-
 }

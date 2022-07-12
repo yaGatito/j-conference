@@ -1,7 +1,7 @@
 package com.epam.jconference.service.mapper;
 
-import com.epam.jconference.service.model.Lecture;
 import com.epam.jconference.controller.dto.LectureDto;
+import com.epam.jconference.service.model.Lecture;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 

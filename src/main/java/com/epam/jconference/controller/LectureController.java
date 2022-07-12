@@ -11,22 +11,22 @@ public class LectureController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/lectures/create")
-    public LectureDto create(@RequestBody LectureDto lectureDto){
+    public LectureDto create(@RequestBody LectureDto lectureDto) {
         return null;
     }
 
     @GetMapping("/lectures/{id}")
-    public LectureDto findById(@PathVariable Long id){
+    public LectureDto findById(@PathVariable Long id) {
         return null;
     }
 
     @PatchMapping("/lectures/{id}")
-    public LectureDto update(@RequestBody LectureDto lectureDto){
+    public LectureDto update(@RequestBody LectureDto lectureDto) {
         return null;
     }
 
     @DeleteMapping("/lectures/{id}")
-    public LectureDto delete(@PathVariable Long id){
+    public LectureDto delete(@PathVariable Long id) {
         return null;
     }
 }

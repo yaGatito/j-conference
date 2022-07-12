@@ -10,27 +10,27 @@ import java.util.List;
 @RestController
 public class TagController {
     @PostMapping("/tags")
-    public Tag create(Tag tag){
+    public Tag create(Tag tag) {
         return null;
     }
 
     @GetMapping("/tags")
-    public List<Tag> findAll(){
+    public List<Tag> findAll() {
         return null;
     }
 
     @GetMapping("/tags/{id}")
-    public List<Tag> findById(@PathVariable Long id){
+    public List<Tag> findById(@PathVariable Long id) {
         return null;
     }
 
     @PatchMapping("/tags")
-    public Tag update(Tag tag){
+    public Tag update(Tag tag) {
         return null;
     }
 
     @DeleteMapping("/tags")
-    public Tag delete(Tag tag){
+    public Tag delete(Tag tag) {
         return null;
     }
 
