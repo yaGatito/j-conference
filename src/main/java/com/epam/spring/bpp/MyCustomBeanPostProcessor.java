@@ -1,6 +1,6 @@
 package com.epam.spring.bpp;
 
-import com.epam.spring.beans.BeanGeneral;
+import com.epam.spring.beans.BeanAbstract;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.stereotype.Component;
@@ -8,8 +8,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class MyCustomBeanPostProcessor implements BeanPostProcessor {
     private static void validate(Object beanObject) {
-        if (beanObject instanceof BeanGeneral) {
-            BeanGeneral bean = (BeanGeneral) beanObject;
+        if (beanObject instanceof BeanAbstract) {
+            BeanAbstract bean = (BeanAbstract) beanObject;
             String message;
             if (bean.getName() != null && bean.getValue() > 0) {
                 message = beanObject.getClass().getSimpleName() + " is valid";

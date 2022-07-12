@@ -6,16 +6,17 @@ import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
+
 @Component
 public class MyCustomBeanFactoryPostProcessor implements BeanFactoryPostProcessor {
     @Override
     public void postProcessBeanFactory(ConfigurableListableBeanFactory configurableListableBeanFactory) throws BeansException {
-        String[] beanDefinitionNames = configurableListableBeanFactory.getBeanDefinitionNames();
-        for (String definitionName : beanDefinitionNames) {
-            if (definitionName.equals("beanB")) {
-                BeanDefinition beanB = configurableListableBeanFactory.getBeanDefinition(definitionName);
-                beanB.setInitMethodName("secondInitMethod");
-            }
-        }
+        Arrays.stream(configurableListableBeanFactory.getBeanDefinitionNames())
+                .filter(beanName->beanName.equals("beanB"))
+                .forEach(beanName->{
+                    BeanDefinition beanDefinition = configurableListableBeanFactory.getBeanDefinition(beanName);
+                    beanDefinition.setInitMethodName("secondInitMethod");
+                });
     }
 }

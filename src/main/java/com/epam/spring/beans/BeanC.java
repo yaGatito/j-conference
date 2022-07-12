@@ -1,6 +1,7 @@
 package com.epam.spring.beans;
 
-public class BeanC extends BeanGeneral {
+public class BeanC extends BeanAbstract {
+
     public BeanC(String name, Integer value) {
         super(name, value);
     }
@@ -12,5 +13,4 @@ public class BeanC extends BeanGeneral {
     public void destroyMethod() {
         System.out.println(this.getClass().getSimpleName() + " destroy");
     }
-
 }

@@ -1,4 +1,4 @@
 package com.epam.spring.beans;
 
-public class BeanF extends BeanGeneral {
+public class BeanF extends BeanAbstract {
 }

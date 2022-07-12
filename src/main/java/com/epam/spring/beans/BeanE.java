@@ -3,7 +3,7 @@ package com.epam.spring.beans;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
-public class BeanE extends BeanGeneral {
+public class BeanE extends BeanAbstract {
 
     @PostConstruct
     public void init() {

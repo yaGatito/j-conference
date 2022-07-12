@@ -3,7 +3,7 @@ package com.epam.spring.beans;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 
-public class BeanA extends BeanGeneral implements InitializingBean, DisposableBean {
+public class BeanA extends BeanAbstract implements InitializingBean, DisposableBean {
 
     @Override
     public void destroy() throws Exception {

@@ -1,6 +1,6 @@
 package com.epam.spring.beans;
 
-public class BeanD extends BeanGeneral {
+public class BeanD extends BeanAbstract {
 
     public BeanD(String name, Integer value) {
         super(name, value);
