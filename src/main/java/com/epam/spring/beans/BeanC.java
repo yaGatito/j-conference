@@ -1,15 +1,15 @@
 package com.epam.spring.beans;
 
-public class BeanC  extends BeanGeneral {
+public class BeanC extends BeanGeneral {
     public BeanC(String name, Integer value) {
         super(name, value);
     }
 
-    public void initMethod(){
+    public void initMethod() {
         System.out.println(this.getClass().getSimpleName() + " init");
     }
 
-    public void destroyMethod(){
+    public void destroyMethod() {
         System.out.println(this.getClass().getSimpleName() + " destroy");
     }
 

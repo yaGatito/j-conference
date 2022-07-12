@@ -7,11 +7,11 @@ import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args) {
-        AnnotationConfigApplicationContext ctx
-                = new AnnotationConfigApplicationContext(FirstConfig.class);
-
-        Arrays.stream(ctx.getBeanDefinitionNames()).forEach(x->System.out.println(ctx.getBean(x)));
-
+        AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext(FirstConfig.class);
+        Arrays.stream(ctx.getBeanDefinitionNames()).forEach(x -> {
+            System.out.println(ctx.getBean(x));
+            System.out.println(ctx.getBeanDefinition(x));
+        });
         ctx.close();
     }
 }

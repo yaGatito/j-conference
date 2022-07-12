@@ -6,15 +6,15 @@ public class BeanB extends BeanGeneral {
         super(name, value);
     }
 
-    public void initMethod(){
+    public void initMethod() {
         System.out.println(this.getClass().getSimpleName() + " init");
     }
 
-    public void secondInitMethod(){
+    public void secondInitMethod() {
         System.out.println(this.getClass().getSimpleName() + " init (changed by BFPP) ");
     }
 
-    public void destroyMethod(){
+    public void destroyMethod() {
         System.out.println(this.getClass().getSimpleName() + " destroy");
     }
 }

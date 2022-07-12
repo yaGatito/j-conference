@@ -14,10 +14,7 @@ public abstract class BeanGeneral {
 
     @Override
     public String toString() {
-        return this.getClass().getSimpleName() + "{" +
-                "name='" + name + '\'' +
-                ", value='" + value + '\'' +
-                '}';
+        return this.getClass().getSimpleName() + "{" + "name='" + name + '\'' + ", value='" + value + '\'' + '}';
     }
 
     public String getName() {

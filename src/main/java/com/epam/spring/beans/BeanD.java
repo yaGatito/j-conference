@@ -6,11 +6,11 @@ public class BeanD extends BeanGeneral {
         super(name, value);
     }
 
-    public void initMethod(){
+    public void initMethod() {
         System.out.println(this.getClass().getSimpleName() + " init");
     }
 
-    public void destroyMethod(){
+    public void destroyMethod() {
         System.out.println(this.getClass().getSimpleName() + " destroy");
     }
 }
