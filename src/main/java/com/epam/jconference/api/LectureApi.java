@@ -1,7 +1,10 @@
 package com.epam.jconference.api;
 
 import com.epam.jconference.dto.LectureDto;
-import io.swagger.annotations.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,7 +28,7 @@ public interface LectureApi {
     @ApiOperation("Assign speaker to free lecture")
     @ApiImplicitParams({@ApiImplicitParam(name = "speaker", type = "requestParam", required = true, value = "ID of speaker that was served on this free lecture"), @ApiImplicitParam(name = "free-lecture", type = "requestParam", required = true, value = "ID of free lecture")})
     @ResponseStatus(HttpStatus.OK)
-    @PostMapping("/assign")
+    @PostMapping("/free/assign")
     LectureDto assignSpeakerForFreeLecture(@RequestParam("speaker") Long speakerId, @RequestParam("free-lecture") Long lectureId);
 
     @ApiOperation("Reject request. User that want reject some request should be logged in")

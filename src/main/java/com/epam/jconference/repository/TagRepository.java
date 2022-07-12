@@ -1,18 +1,13 @@
 package com.epam.jconference.repository;
 
 import com.epam.jconference.model.Tag;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Map;
 
-public interface TagRepository {
-    Tag create(Tag tag);
-
-    Tag getById(Long id);
-
-    Tag update(Tag tag);
-
-    Tag addTranslations(Long id, Map<String, String> translations);
-
-    List<Tag> findAll();
+@Repository
+public interface TagRepository extends JpaRepository<Tag, Long> {
+    @Override
+    List<Tag> findAllById(Iterable<Long> longs);
 }

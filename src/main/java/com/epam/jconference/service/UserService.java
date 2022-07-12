@@ -1,7 +1,6 @@
 package com.epam.jconference.service;
 
 import com.epam.jconference.dto.UserDto;
-import com.epam.jconference.model.User;
 import org.springframework.http.ResponseEntity;
 
 public interface UserService {

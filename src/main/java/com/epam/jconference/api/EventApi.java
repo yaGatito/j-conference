@@ -1,7 +1,7 @@
 package com.epam.jconference.api;
 
 import com.epam.jconference.dto.EventDto;
-import com.epam.jconference.dto.EventFilterDto;
+import com.epam.jconference.dto.EventPagingSortingFilterDto;
 import com.epam.jconference.dto.group.OnCreate;
 import com.epam.jconference.dto.group.OnUpdate;
 import io.swagger.annotations.Api;
@@ -27,7 +27,7 @@ public interface EventApi {
     @ApiImplicitParam(name = "eventFilter", type = "requestBody", required = false, value = "Has default values for sorting and filtering")
     @ResponseStatus(HttpStatus.OK)
     @GetMapping
-    List<EventDto> getAll(@RequestBody @Valid EventFilterDto eventFilter);
+    List<EventDto> getAll(@RequestBody @Valid EventPagingSortingFilterDto eventFilter);
 
     @ApiOperation("Get by id")
     @ResponseStatus(HttpStatus.OK)

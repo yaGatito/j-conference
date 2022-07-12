@@ -3,17 +3,12 @@ package com.epam.jconference.controller;
 import com.epam.jconference.api.UserApi;
 import com.epam.jconference.controller.assembler.UserAssembler;
 import com.epam.jconference.controller.model.UserModel;
-import com.epam.jconference.dto.LectureDto;
 import com.epam.jconference.dto.UserDto;
-import com.epam.jconference.dto.group.OnCreate;
-import com.epam.jconference.dto.group.OnLogin;
 import com.epam.jconference.service.impl.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController

@@ -25,7 +25,7 @@ public interface UserApi {
 
     @ApiOperation("Update user")
     @ResponseStatus(HttpStatus.OK)
-    @PutMapping
+    @PatchMapping
     UserModel update(@RequestBody @Validated(OnUpdate.class) UserDto userDto);
 
     @ApiOperation("Get user")

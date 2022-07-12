@@ -1,41 +1,42 @@
 package com.epam.jconference.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.*;
+import java.util.List;
 
 @Data
+@Builder
+@Entity
+@AllArgsConstructor
+@NoArgsConstructor
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Event {
-    private Long id;
-    private String topic;
-    private List<Long> tags;
-    private LocalTime startTime;
-    private LocalTime endTime;
-    private LocalDate date;
-    private List<Long> lectures;
-    private List<Long> listeners;
 
-    /**
-     * Returns an array. First element of which contains only past events.
-     * Second element of which contains today and future events.
-     *
-     * @param events list which will be filtered to past and future
-     * @return array
-     */
-    public static List<Event>[] filter(List<Event> events) {
-        List<Event> past = new ArrayList<>();
-        List<Event> future = new ArrayList<>();
-        LocalDate today = LocalDate.now();
-        LocalTime timeNow = LocalTime.of(LocalTime.now().getHour(), LocalTime.now().getMinute());
-        for (Event event : events) {
-            if (event.getDate().compareTo(today) > 0 || (event.getDate().compareTo(today) == 0 && event.getStartTime().compareTo(timeNow) >= 0)) {
-                future.add(event);
-            } else {
-                past.add(event);
-            }
-        }
-        return new List[]{past, future};
-    }
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String topic;
+
+    private String location;
+
+    private LocalTime startTime;
+
+    private LocalTime endTime;
+
+    private LocalDate date;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    private List<Tag> tags;
+
+    private Integer lectures;
+
+    private Integer listeners;
 }

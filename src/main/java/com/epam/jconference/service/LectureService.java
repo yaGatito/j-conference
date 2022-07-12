@@ -1,8 +1,6 @@
 package com.epam.jconference.service;
 
 import com.epam.jconference.dto.LectureDto;
-import com.epam.jconference.model.Lecture;
-import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 

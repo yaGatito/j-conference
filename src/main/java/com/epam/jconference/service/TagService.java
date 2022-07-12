@@ -1,7 +1,6 @@
 package com.epam.jconference.service;
 
 import com.epam.jconference.dto.TagDto;
-import com.epam.jconference.model.Tag;
 
 import java.util.List;
 import java.util.Map;
@@ -16,4 +15,6 @@ public interface TagService {
     TagDto addTranslations(Long id, Map<String, String> translations);
 
     List<TagDto> findAll();
+
+    List<TagDto> findAllByID(List<Long> ids);
 }

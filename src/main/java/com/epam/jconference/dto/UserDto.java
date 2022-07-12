@@ -5,11 +5,10 @@ import com.epam.jconference.dto.group.OnLogin;
 import com.epam.jconference.dto.group.OnUpdate;
 import com.epam.jconference.model.enums.UserRole;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.*;
+import lombok.Data;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 
 @Data
@@ -17,11 +16,9 @@ import javax.validation.constraints.Null;
 public class UserDto {
 
     @Null(message = "{user.id.null}", groups = {OnCreate.class, OnLogin.class})
-    @NotNull(message = "{user.id.not_null}", groups = OnUpdate.class)
     private Long id;
 
     @Null(message = "{user.role.null}", groups = {OnCreate.class, OnLogin.class})
-    @NotNull(message = "{user.role.not_null}", groups = OnUpdate.class)
     private UserRole role;
 
     @NotBlank(message = "{user.name.not_blank}", groups = {OnCreate.class})
@@ -32,7 +29,6 @@ public class UserDto {
     @Null(message = "{user.lastname.null}", groups = {OnLogin.class})
     private String lastname;
 
-    @Null(message = "{user.email.null}", groups = OnUpdate.class)
     @Email(message = "{user.email}", groups = {OnCreate.class, OnLogin.class})
     private String email;
 

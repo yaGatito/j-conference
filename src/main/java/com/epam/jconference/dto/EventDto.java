@@ -2,8 +2,11 @@ package com.epam.jconference.dto;
 
 import com.epam.jconference.dto.group.OnCreate;
 import com.epam.jconference.dto.group.OnUpdate;
+import com.epam.jconference.model.Tag;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Data;
 
 import javax.validation.constraints.*;
@@ -12,6 +15,7 @@ import java.time.LocalTime;
 import java.util.List;
 
 @Data
+@Builder(access = AccessLevel.PUBLIC)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class EventDto {
 
@@ -23,7 +27,7 @@ public class EventDto {
     private String topic;
 
     @NotEmpty(message = "{event.tags.not_empty}", groups = OnCreate.class)
-    private List<Long> tags;
+    private List<Tag> tags;
 
     @NotNull(message = "{event.start_time.not_null}", groups = OnCreate.class)
     private LocalTime startTime;
@@ -37,9 +41,9 @@ public class EventDto {
     @NotBlank(message = "{event.location.not_blank}", groups = OnCreate.class)
     private String location;
 
-    @Null(message = "{event.lectures.null}", groups = {OnCreate.class, OnUpdate.class})
-    private List<Long> lectures;
-
     @Null(message = "{event.listeners.null}", groups = {OnCreate.class, OnUpdate.class})
-    private List<Long> listeners;
+    private Integer listeners;
+
+    @Null(message = "{event.lectures.null}", groups = {OnCreate.class, OnUpdate.class})
+    private Integer lectures;
 }

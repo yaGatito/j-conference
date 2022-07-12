@@ -1,18 +1,12 @@
 package com.epam.jconference.repository;
 
 import com.epam.jconference.model.User;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface UserRepository {
-    User create(User user);
+import java.util.Optional;
 
-    User update(User user);
-
-    User login(User user);
-
-    ResponseEntity<Void> logout();
-
-    User profile();
-
-    User getById(Long id);
+@Repository
+public interface UserRepository extends JpaRepository<User, Long> {
+    Optional<User> getByEmail(String email);
 }

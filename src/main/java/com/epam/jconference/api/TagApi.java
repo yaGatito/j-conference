@@ -34,4 +34,9 @@ public interface TagApi {
     @PostMapping("/translations/{id}")
     @ResponseStatus(HttpStatus.OK)
     TagDto addTranslations(@PathVariable Long id, @RequestBody Map<String, String> translations);
+
+    @ApiOperation("Give all tags by specified ids")
+    @GetMapping("/ids")
+    @ResponseStatus(HttpStatus.OK)
+    List<TagDto> findAllById(@RequestBody List<Long> ids);
 }
