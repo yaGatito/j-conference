@@ -6,6 +6,8 @@ import com.epam.jconference.exception.UnauthorizedAccessException;
 import com.epam.jconference.model.Error;
 import com.epam.jconference.model.enums.ErrorType;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -27,7 +29,7 @@ public class ExceptionHandlingController {
         return ex.getBindingResult().getAllErrors().stream().map(err -> new Error(err.getDefaultMessage(), ErrorType.VALIDATION_ERROR_TYPE, LocalDateTime.now())).collect(Collectors.toList());
     }
 
-    @ExceptionHandler(EntityNotFoundException.class)
+    @ExceptionHandler({EntityNotFoundException.class, javax.persistence.EntityNotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Error handleEntityNotFoundException(EntityNotFoundException ex) {
         log.error("handleEntityNotFoundException: exception {}", ex.getMessage(), ex);
@@ -48,10 +50,24 @@ public class ExceptionHandlingController {
         return new Error(ex.getMessage(), ErrorType.UNAUTHORIZED_ACCESS_ERROR_TYPE, LocalDateTime.now());
     }
 
-    @ExceptionHandler(IndexOutOfBoundsException.class)
+    @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public Error handleException(NullPointerException ex) {
+    public Error handleException(Exception ex) {
         log.error("handleException: exception {}", ex.getMessage(), ex);
         return new Error(ex.getMessage(), ErrorType.FATAL_ERROR_TYPE, LocalDateTime.now());
+    }
+
+    @ExceptionHandler(DuplicateKeyException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Error handleException(DuplicateKeyException ex) {
+        log.error("handleException: exception {}", ex.getMessage(), ex);
+        return new Error(ex.getMessage(), ErrorType.INVALID_DATA_ERROR_TYPE, LocalDateTime.now());
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Error handleException(DataIntegrityViolationException ex) {
+        log.error("handleException: exception {}", ex.getMessage(), ex);
+        return new Error(ex.getMessage(), ErrorType.INVALID_DATA_ERROR_TYPE, LocalDateTime.now());
     }
 }
