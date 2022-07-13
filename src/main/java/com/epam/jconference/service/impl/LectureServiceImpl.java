@@ -9,6 +9,7 @@ import com.epam.jconference.model.Event;
 import com.epam.jconference.model.Lecture;
 import com.epam.jconference.model.User;
 import com.epam.jconference.model.enums.LectureStatus;
+import com.epam.jconference.model.enums.RequestStatus;
 import com.epam.jconference.repository.EventRepository;
 import com.epam.jconference.repository.LectureRepository;
 import com.epam.jconference.repository.RequestManagementRepository;
@@ -39,12 +40,12 @@ public class LectureServiceImpl implements LectureService {
     @Override
     @Transactional
     public LectureDto create(LectureDto lectureDto) {
-        if (!eventRepository.existsById(lectureDto.getEvent().getId())) {
-            throw new EntityNotFoundException("Event with id:" + lectureDto.getEvent().getId() + " doesn't exist");
-        }
-        Event persistedEvent = eventRepository.getById(lectureDto.getEvent().getId());
+        Event persistedEvent = checkThenGet(lectureDto.getEvent().getId());
         Lecture lecture = mapper.mapToEntity(lectureDto);
         lecture.setEvent(persistedEvent);
+        if (lectureDto.getStatus().equals(LectureStatus.REQUEST) || lectureDto.getStatus().equals(LectureStatus.REJECTED)) {
+            throw new InvalidOperationException("Created lecture can't be REQUEST or REJECTED");
+        }
         if (lectureDto.getStatus().equals(LectureStatus.FREE)) {
             if (Objects.nonNull(lectureDto.getSpeaker())) {
                 throw new InvalidOperationException("Speaker should be null for free lecture");
@@ -68,22 +69,6 @@ public class LectureServiceImpl implements LectureService {
             throw new EntityNotFoundException("Lecture with id:" + id + " doesn't exist");
         }
         return mapper.mapToDto(lectureRepository.getById(id));
-    }
-
-    @Override
-    public List<LectureDto> getFreeLectures() {
-        session.isLogged();
-        User user = session.getUser();
-        List<Lecture> allFreeLectures = lectureRepository.findAllByStatus(LectureStatus.FREE);
-        List<Long> idsOfAppliedLectures = requestManagementRepository.appliedFreeLectures(user.getId());
-        return allFreeLectures.stream().peek(l -> {
-            boolean applied = idsOfAppliedLectures.contains(l.getId());
-            if (applied) {
-                l.setInfo("applied");
-            } else {
-                l.setInfo("not applied");
-            }
-        }).map(mapper::mapToDto).collect(Collectors.toList());
     }
 
     @Override
@@ -112,22 +97,6 @@ public class LectureServiceImpl implements LectureService {
     }
 
     @Override
-    public LectureDto applyFreeLecture(Long lectureId) {
-        session.isLogged();
-        Lecture persistedLecture = checkThenGet(lectureId, LectureStatus.FREE);
-        Long speakerId = session.getUser().getId();
-        requestManagementRepository.applyOnFreeLecture(speakerId, lectureId);
-        return mapper.mapToDto(persistedLecture);
-    }
-
-    @Override
-    public List<LectureDto> getRequests() {
-        session.isLogged();
-        User sessionUser = session.getUser();
-        return lectureRepository.findAllByStatusAndSpeaker(LectureStatus.REQUEST, sessionUser).stream().map(mapper::mapToDto).collect(Collectors.toList());
-    }
-
-    @Override
     public LectureDto rejectRequest(Long requestId) {
         Lecture persistedLecture = checkThenGet(requestId, LectureStatus.REQUEST);
         persistedLecture.setStatus(LectureStatus.REJECTED);
@@ -142,26 +111,46 @@ public class LectureServiceImpl implements LectureService {
     }
 
     @Override
-    public LectureDto addRequest(LectureDto lectureDto) {
+    public List<LectureDto> moderHistory() {
         session.isLogged();
-        User sessionUser = session.getUser();
-        lectureDto.setStatus(LectureStatus.REQUEST);
-        lectureDto.setSpeaker(sessionUser);
-        return mapper.mapToDto(lectureRepository.save(mapper.mapToEntity(lectureDto)));
+        List<LectureDto> rejectedLectures = lectureRepository.findAllByStatus(LectureStatus.REJECTED).stream()
+                .peek(l -> l.setInfo("request/offer")).map(mapper::mapToDto).collect(Collectors.toList());
+
+        List<LectureDto> rejectedFreeLectures = lectureRepository.freeLecturesByRequestStatus(RequestStatus.REJECTED).stream()
+                .peek(l -> l.setInfo("free lecture")).map(mapper::mapToDto).collect(Collectors.toList());
+
+        rejectedLectures.addAll(rejectedFreeLectures);
+        return rejectedLectures;
     }
 
     @Override
-    public List<LectureDto> getSecuredLectures() {
+    public List<LectureDto> getFreeLectures() {
         session.isLogged();
-        User sessionUser = session.getUser();
-        return lectureRepository.findAllByStatusAndSpeaker(LectureStatus.SECURED, sessionUser).stream().map(mapper::mapToDto).collect(Collectors.toList());
+        User user = session.getUser();
+        List<Lecture> allFreeLectures = lectureRepository.findAllByStatus(LectureStatus.FREE);
+        List<Long> idsOfAppliedLectures = requestManagementRepository.appliedFreeLectures(user.getId());
+        return allFreeLectures.stream().peek(l -> {
+            boolean applied = idsOfAppliedLectures.contains(l.getId());
+            if (applied) {
+                l.setInfo("applied");
+            } else {
+                l.setInfo("not applied");
+            }
+        }).map(mapper::mapToDto).collect(Collectors.toList());
+
     }
 
     @Override
-    public List<LectureDto> getOffers() {
+    public List<LectureDto> getLectures(LectureStatus status, Boolean isModerAccess) {
         session.isLogged();
         User sessionUser = session.getUser();
-        return lectureRepository.findAllByStatusAndSpeaker(LectureStatus.OFFER, sessionUser).stream().map(mapper::mapToDto).collect(Collectors.toList());
+        if (isModerAccess) {
+            return lectureRepository.findAllByStatus(status)
+                    .stream().map(mapper::mapToDto).collect(Collectors.toList());
+        } else {
+            return lectureRepository.findAllByStatusAndSpeaker(status, sessionUser)
+                    .stream().map(mapper::mapToDto).collect(Collectors.toList());
+        }
     }
 
     @Override
@@ -182,15 +171,46 @@ public class LectureServiceImpl implements LectureService {
         return mapper.mapToDto(lectureRepository.save(persistedLecture));
     }
 
-
     @Override
-    public List<LectureDto> speakerHistory() {
-        return null;
+    public LectureDto addRequest(LectureDto lectureDto) {
+        session.isLogged();
+        Event persistedEvent = checkThenGet(lectureDto.getEvent().getId());
+        User sessionUser = session.getUser();
+        lectureDto.setStatus(LectureStatus.REQUEST);
+        lectureDto.setSpeaker(sessionUser);
+        lectureDto.setEvent(persistedEvent);
+        return mapper.mapToDto(lectureRepository.save(mapper.mapToEntity(lectureDto)));
     }
 
     @Override
-    public List<LectureDto> moderHistory() {
-        return null;
+    public LectureDto applyFreeLecture(Long lectureId) {
+        session.isLogged();
+        Lecture persistedLecture = checkThenGet(lectureId, LectureStatus.FREE);
+        Long speakerId = session.getUser().getId();
+        requestManagementRepository.applyOnFreeLecture(speakerId, lectureId);
+        return mapper.mapToDto(persistedLecture);
+    }
+
+    @Override
+    public List<LectureDto> speakerHistory() {
+        session.isLogged();
+        User sessionUser = session.getUser();
+        List<LectureDto> rejectedLectures = lectureRepository.findAllByStatusAndSpeaker(LectureStatus.REJECTED, sessionUser).stream()
+                .peek(l -> l.setInfo("request/offer")).map(mapper::mapToDto).collect(Collectors.toList());
+
+        List<LectureDto> rejectedFreeLectures = lectureRepository.freeLecturesByRequestStatusAndSpeaker(RequestStatus.REJECTED, sessionUser).stream()
+                .peek(l -> l.setInfo("free lecture")).map(mapper::mapToDto).collect(Collectors.toList());
+
+        rejectedLectures.addAll(rejectedFreeLectures);
+        return rejectedLectures;
+    }
+
+    private Lecture checkThenGet(Long lectureId, LectureStatus status, Long speakerId) {
+        Lecture persistedLecture = checkThenGet(lectureId, status);
+        if (!persistedLecture.getSpeaker().getId().equals(speakerId)) {
+            throw new InvalidOperationException("User haven't access to this lecture");
+        }
+        return persistedLecture;
     }
 
     private Lecture checkThenGet(Long lectureId, LectureStatus status) {
@@ -204,11 +224,10 @@ public class LectureServiceImpl implements LectureService {
         return persistedLecture;
     }
 
-    private Lecture checkThenGet(Long lectureId, LectureStatus status, Long speakerId) {
-        Lecture persistedLecture = checkThenGet(lectureId, status);
-        if (!persistedLecture.getSpeaker().getId().equals(speakerId)) {
-            throw new InvalidOperationException("User haven't access to this lecture");
+    private Event checkThenGet(Long eventId) {
+        if (!eventRepository.existsById(eventId)) {
+            throw new EntityNotFoundException("Event with id:" + eventId + " doesn't exist");
         }
-        return persistedLecture;
+        return eventRepository.getById(eventId);
     }
 }

@@ -8,9 +8,9 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Data
-@Entity(name = "free_requests")
+@Entity(name = "RequestOnFreeLecture")
 @NoArgsConstructor
-@Table(uniqueConstraints = {
+@Table(name = "free_requests" ,uniqueConstraints = {
         @UniqueConstraint(columnNames = {"speaker_id", "free_lecture_id"})
 })
 public class RequestOnFreeLecture implements Serializable {
