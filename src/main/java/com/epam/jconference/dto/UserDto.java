@@ -5,6 +5,7 @@ import com.epam.jconference.dto.group.OnLogin;
 import com.epam.jconference.dto.group.OnUpdate;
 import com.epam.jconference.model.enums.UserRole;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Builder;
 import lombok.Data;
 
 import javax.validation.constraints.Email;
@@ -12,6 +13,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Null;
 
 @Data
+@Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserDto {
 

@@ -28,7 +28,7 @@ public class UserController implements UserApi {
     }
 
     public UserModel getById(Long id) {
-        return null;
+        return userAssembler.toModel(userService.getById(id));
     }
 
     public UserModel login(UserDto userDto) {
