@@ -15,6 +15,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -39,7 +42,9 @@ public class UserServiceImpl implements UserService {
     public UserDto login(UserDto user) {
         String email = user.getEmail();
         String password = user.getPassword();
-        User persistedUser = userRepository.getByEmail(email).orElseThrow(() -> new EntityNotFoundException("User with email: " + email + " doesn't exist"));
+        User persistedUser = userRepository.getByEmail(email)
+                                           .orElseThrow(() -> new EntityNotFoundException("User " +
+                                                   "with email: " + email + " doesn't exist"));
         String persistedUserPassword = persistedUser.getPassword();
         if (!persistedUserPassword.equals(password)) {
             throw new UnauthorizedAccessException("Wrong password");
@@ -51,7 +56,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto update(UserDto userDto) {
         String email = userDto.getEmail();
-        User persistedUser = userRepository.getByEmail(email).orElseThrow(() -> new EntityNotFoundException("User with email: " + email + " doesn't exist"));
+        User persistedUser = userRepository.getByEmail(email)
+                                           .orElseThrow(() -> new EntityNotFoundException("User " +
+                                                   "with email: " + email + " doesn't exist"));
         mapper.populateUserWithPresentUserDtoFields(persistedUser, userDto);
         persistedUser = userRepository.save(persistedUser);
         return mapper.mapUserDto(persistedUser);
@@ -69,10 +76,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto getById(Long id) {
-        if (!userRepository.existsById(id)){
-            throw new EntityNotFoundException("User doesn't exist");
-        }
-        return mapper.mapUserDto(userRepository.getById(id));
+    public UserDto getByEmail(String email) {
+        return mapper.mapUserDto(userRepository.getByEmail(email)
+                                               .orElseThrow(() -> new EntityNotFoundException("User doesn't exist")));
+    }
+
+    @Override
+    public UserDto setUserRole(UserRole role, String email) {
+        User persistedUser = userRepository.getByEmail(email)
+                                           .orElseThrow(() -> new EntityNotFoundException("User doesn't exist"));
+        persistedUser.setRole(role);
+        return mapper.mapUserDto(userRepository.save(persistedUser));
+    }
+
+    @Override
+    public List<UserDto> getAllByRole(UserRole role) {
+        return userRepository.findAllByRole(role)
+                             .stream()
+                             .map(mapper::mapUserDto)
+                             .collect(Collectors.toList());
     }
 }
