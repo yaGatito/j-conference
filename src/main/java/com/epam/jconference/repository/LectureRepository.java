@@ -16,13 +16,18 @@ import java.util.List;
 public interface LectureRepository extends JpaRepository<Lecture, Long> {
     Integer existsFreeLecture(@Param("event") Event event, @Param("topic") String topic);
 
+    boolean existsByEventAndSpeakerAndTopic(Event event, User speaker, String topic);
+
     List<Lecture> findAllByStatus(LectureStatus lectureStatus);
 
     List<Lecture> findAllByStatusAndSpeaker(LectureStatus status, User speaker);
 
-    @Query(value = "SELECT l FROM Lecture l JOIN RequestOnFreeLecture r ON l = r.freeLecture WHERE r.status = :status")
+    @Query(value = "SELECT l FROM Lecture l JOIN RequestOnFreeLecture r ON l = r.freeLecture " +
+            "WHERE r.status = :status")
     List<Lecture> freeLecturesByRequestStatus(@Param("status") RequestStatus status);
 
-    @Query(value = "SELECT l FROM Lecture l JOIN RequestOnFreeLecture r ON l = r.freeLecture WHERE r.status = :status and r.speaker = :speaker")
-    List<Lecture> freeLecturesByRequestStatusAndSpeaker(@Param("status") RequestStatus status, @Param("speaker") User speaker);
+    @Query(value = "SELECT l FROM Lecture l JOIN RequestOnFreeLecture r ON l = r.freeLecture " +
+            "WHERE r.status = :status and r.speaker = :speaker")
+    List<Lecture> freeLecturesByRequestStatusAndSpeaker(@Param("status") RequestStatus status,
+                                                        @Param("speaker") User speaker);
 }

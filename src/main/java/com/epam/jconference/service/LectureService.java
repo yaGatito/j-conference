@@ -18,13 +18,11 @@ public interface LectureService {
 
     List<LectureDto> moderHistory();
 
-    List<LectureDto> getFreeLectures();
-
     List<LectureDto> getLectures(LectureStatus status, Boolean isModerAccess);
 
     LectureDto acceptOffer(Long lectureId);
 
-    LectureDto declineOffer(Long lectureId);
+    LectureDto rejectOffer(Long lectureId);
 
     LectureDto addRequest(LectureDto lectureDto);
 

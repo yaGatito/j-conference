@@ -26,22 +26,12 @@ public class LectureController implements LectureApi {
     }
 
     @Override
-    public List<LectureDto> getSecuredLecturesForModer() {
-        return lectureService.getLectures(LectureStatus.SECURED, true);
-    }
-
-    @Override
-    public List<LectureDto> getFreeLecturesForModer() {
-        return lectureService.getLectures(LectureStatus.FREE, true);
+    public List<LectureDto> getLecturesForModer(String status) {
+        return lectureService.getLectures(LectureStatus.valueOf(status.toUpperCase()), true);
     }
 
     public LectureDto assignSpeakerForFreeLecture(Long speakerId, Long lectureId) {
         return lectureService.assignSpeakerForFreeLecture(speakerId, lectureId);
-    }
-
-    @Override
-    public List<LectureDto> getRequestsForModer() {
-        return lectureService.getLectures(LectureStatus.REQUEST, true);
     }
 
     public LectureDto rejectRequest(Long requestId) {
@@ -52,29 +42,17 @@ public class LectureController implements LectureApi {
         return lectureService.acceptRequest(requestId);
     }
 
-    @Override
-    public List<LectureDto> getOffersForModer() {
-        return lectureService.getLectures(LectureStatus.OFFER, true);
-    }
-
     public List<LectureDto> moderHistory() {
         return lectureService.moderHistory();
     }
 
-    public List<LectureDto> getSecuredLectures() {
-        return lectureService.getLectures(LectureStatus.SECURED, false);
-    }
-
-    public List<LectureDto> getFreeLectures() {
-        return lectureService.getFreeLectures();
+    @Override
+    public List<LectureDto> getLecturesForSpeaker(String status) {
+        return lectureService.getLectures(LectureStatus.valueOf(status.toUpperCase()), false);
     }
 
     public LectureDto applyFreeLecture(Long lectureId) {
         return lectureService.applyFreeLecture(lectureId);
-    }
-
-    public List<LectureDto> getOffers() {
-        return lectureService.getLectures(LectureStatus.OFFER, false);
     }
 
     public LectureDto acceptOffer(Long lectureId) {
@@ -82,11 +60,7 @@ public class LectureController implements LectureApi {
     }
 
     public LectureDto rejectOffer(Long lectureId) {
-        return lectureService.declineOffer(lectureId);
-    }
-
-    public List<LectureDto> getRequests() {
-        return lectureService.getLectures(LectureStatus.REQUEST, false);
+        return lectureService.rejectOffer(lectureId);
     }
 
     public LectureDto addRequest(LectureDto lectureDto) {
