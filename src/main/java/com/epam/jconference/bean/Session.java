@@ -35,12 +35,16 @@ public class Session {
     }
 
     public void login(User user) {
-        if (Objects.isNull(this.user)) {
-            this.user = user;
-            sessionLog.put("login " + user.getId(), LocalTime.now());
-        } else {
-            throw new InvalidOperationException("Invalid login. The already logged in user should logout");
+        if (Objects.isNull(user)) {
+            throw new InvalidOperationException("User to login is null");
         }
+        if (Objects.nonNull(this.user)) {
+            throw new InvalidOperationException("Invalid login. The already logged in user should " +
+                    "logout");
+        }
+        this.user = user;
+        sessionLog.put("login " + user.getId(), LocalTime.now());
+
     }
 
     public User profile() {
@@ -63,7 +67,7 @@ public class Session {
 
     public void isSpeaker() {
         isLogged();
-        if (!user.getRole().equals(UserRole.MODER)) {
+        if (!user.getRole().equals(UserRole.SPEAKER)) {
             throw new UnauthorizedAccessException("User role should be moder role");
         }
     }
