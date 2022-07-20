@@ -1,8 +1,8 @@
 package com.epam.jconference.dto;
 
-import com.epam.jconference.dto.validation.TagConstraint;
+import com.epam.jconference.dto.validation.strings.StringItem;
+import com.epam.jconference.dto.validation.strings.ValidateString;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import lombok.Data;
 
@@ -13,10 +13,9 @@ import java.util.Map;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class TagDto {
 
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
 
-    @TagConstraint(message = "{tag.name}")
+    @ValidateString(value = StringItem.TAG)
     private String name;
 
     @JsonUnwrapped

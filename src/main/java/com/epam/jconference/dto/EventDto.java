@@ -2,9 +2,9 @@ package com.epam.jconference.dto;
 
 import com.epam.jconference.dto.group.OnCreate;
 import com.epam.jconference.dto.group.OnUpdate;
-import com.epam.jconference.model.Tag;
+import com.epam.jconference.dto.validation.strings.StringItem;
+import com.epam.jconference.dto.validation.strings.ValidateString;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
@@ -19,15 +19,17 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class EventDto {
 
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @NotNull(groups = OnUpdate.class)
+    @Null(groups = OnCreate.class)
     private Long id;
 
     @Null(message = "{event.topic.null}", groups = OnUpdate.class)
-    @NotBlank(message = "{event.topic.not_blank}", groups = OnCreate.class)
+    @NotBlank(groups = OnCreate.class)
+    @ValidateString(value = StringItem.TOPIC, groups = {OnCreate.class})
     private String topic;
 
     @NotEmpty(message = "{event.tags.not_empty}", groups = OnCreate.class)
-    private List<Tag> tags;
+    private List<TagDto> tags;
 
     @NotNull(message = "{event.start_time.not_null}", groups = OnCreate.class)
     private LocalTime startTime;
@@ -36,9 +38,11 @@ public class EventDto {
     private LocalTime endTime;
 
     @Future(message = "{event.date.future}", groups = {OnCreate.class, OnUpdate.class})
+    @NotNull(message = "{event.end_time.not_null}", groups = OnCreate.class)
     private LocalDate date;
 
     @NotBlank(message = "{event.location.not_blank}", groups = OnCreate.class)
+    @ValidateString(value = StringItem.LOCATION, groups = {OnCreate.class, OnUpdate.class})
     private String location;
 
     @Null(message = "{event.listeners.null}", groups = {OnCreate.class, OnUpdate.class})
