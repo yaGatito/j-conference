@@ -35,4 +35,4 @@ info:
     os: ${os.name}
     PID: ${PID}
     user-country: ${user.country}
-    user-timzone: ${user.timezone}
+    user-timezone: ${user.timezone}

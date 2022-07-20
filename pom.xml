@@ -16,6 +16,9 @@
         <lombok.version>1.18.24</lombok.version>
         <hibernate-validator.version>6.0.10.Final</hibernate-validator.version>
         <postgresql.version>42.4.0</postgresql.version>
+        <h2.version>1.4.194</h2.version>
+        <http.client>4.4.1</http.client>
+        <version.cglib>3.3.0</version.cglib>
     </properties>
 
     <parent>
@@ -48,6 +51,10 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
         </dependency>
         <dependency>
             <groupId>org.postgresql</groupId>
@@ -84,6 +91,20 @@
             <artifactId>mapstruct-processor</artifactId>
             <version>${mapstruct.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>${h2.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>${http.client}</version>
+        </dependency>
+        <dependency>
+            <groupId>cglib</groupId>
+            <artifactId>cglib</artifactId>
+            <version>${version.cglib}</version>
+        </dependency>
     </dependencies>
-
 </project>
