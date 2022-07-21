@@ -36,7 +36,7 @@ public class TagServiceTest {
     void createTagTest() {
         Tag tag1 = TestTagDataUtil.createTag1();
         when(tagJpaRepository.existsByName(tag1.getName())).thenReturn(false);
-        when(tagJpaRepository.save(tag1)).thenReturn(tag1);
+        when(tagJpaRepository.save(any())).thenReturn(tag1);
         TagDto tag1Dto = createTag1Dto();
 
         TagDto tagDto = tagService.create(tag1Dto);
