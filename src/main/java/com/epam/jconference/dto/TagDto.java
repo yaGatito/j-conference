@@ -15,7 +15,7 @@ public class TagDto {
 
     private Long id;
 
-    @ValidateString(value = StringItem.TAG)
+    @ValidateString(message = "{tag}{invalid}", value = StringItem.TAG)
     private String name;
 
     @JsonUnwrapped

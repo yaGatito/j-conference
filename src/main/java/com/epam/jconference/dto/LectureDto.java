@@ -17,22 +17,22 @@ import javax.validation.constraints.Null;
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class LectureDto {
-    @Null(message = "id must be null", groups = {OnCreate.class, OnRequest.class})
+    @Null(message = "{id}{null}", groups = {OnCreate.class, OnRequest.class})
     private Long id;
 
-    @NotBlank(message = "{lectures.topic.not_blank}", groups = {OnRequest.class, OnCreate.class})
-    @ValidateString(value = StringItem.TOPIC, groups = {OnRequest.class, OnCreate.class})
+    @NotBlank(message = "{topic}{not_blank}", groups = {OnRequest.class, OnCreate.class})
+    @ValidateString(message = "{topic}{invalid}", value = StringItem.TOPIC, groups = {OnRequest.class, OnCreate.class})
     private String topic;
 
-    @NotNull(message = "{lectures.status.not_null}", groups = OnCreate.class)
-    @Null(message = "{lectures.status.null}", groups = OnRequest.class)
+    @NotNull(message = "{l_status}{not_null}", groups = OnCreate.class)
+    @Null(message = "{l_status}{null}", groups = OnRequest.class)
     private LectureStatus status;
 
-    @NotNull(message = "{lectures.event.not_null}", groups = {OnRequest.class, OnCreate.class})
+    @NotNull(message = "{event}{not_null}", groups = {OnRequest.class, OnCreate.class})
     private EventDto event;
 
-    @NotNull(message = "{lectures.event.not_null}", groups = OnCreate.class)
-    @Null(message = "{lectures.speaker.null}", groups = OnRequest.class)
+    @NotNull(message = "{event}{not_null}", groups = OnCreate.class)
+    @Null(message = "{speaker}{null}", groups = OnRequest.class)
     private UserDto speaker;
 
     private String info;

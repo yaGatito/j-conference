@@ -19,35 +19,35 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class EventDto {
 
-    @NotNull(groups = OnUpdate.class)
-    @Null(groups = OnCreate.class)
+    @NotNull(message = "{id}{not_null}", groups = OnUpdate.class)
+    @Null(message = "{id}{null}", groups = OnCreate.class)
     private Long id;
 
-    @Null(message = "{event.topic.null}", groups = OnUpdate.class)
-    @NotBlank(groups = OnCreate.class)
-    @ValidateString(value = StringItem.TOPIC, groups = {OnCreate.class})
+    @Null(message = "{topic}{null}", groups = OnUpdate.class)
+    @NotBlank(message = "{topic}{not_blank}", groups = OnCreate.class)
+    @ValidateString(message = "{topic}{invalid}", value = StringItem.TOPIC, groups = {OnCreate.class})
     private String topic;
 
-    @NotEmpty(message = "{event.tags.not_empty}", groups = OnCreate.class)
+    @NotEmpty(message = "{tags}{not_empty}", groups = OnCreate.class)
     private List<TagDto> tags;
 
-    @NotNull(message = "{event.start_time.not_null}", groups = OnCreate.class)
+    @NotNull(message = "{start_time}{not_null}", groups = OnCreate.class)
     private LocalTime startTime;
 
-    @NotNull(message = "{event.end_time.not_null}", groups = OnCreate.class)
+    @NotNull(message = "{end_time}{not_null}", groups = OnCreate.class)
     private LocalTime endTime;
 
-    @Future(message = "{event.date.future}", groups = {OnCreate.class, OnUpdate.class})
-    @NotNull(message = "{event.end_time.not_null}", groups = OnCreate.class)
+    @Future(message = "{date}{future}", groups = {OnCreate.class, OnUpdate.class})
+    @NotNull(message = "{end_time}{not_null}", groups = OnCreate.class)
     private LocalDate date;
 
-    @NotBlank(message = "{event.location.not_blank}", groups = OnCreate.class)
-    @ValidateString(value = StringItem.LOCATION, groups = {OnCreate.class, OnUpdate.class})
+    @NotBlank(message = "{location}{not_blank}", groups = OnCreate.class)
+    @ValidateString(message = "{location}{invalid}", value = StringItem.LOCATION, groups = {OnCreate.class, OnUpdate.class})
     private String location;
 
-    @Null(message = "{event.listeners.null}", groups = {OnCreate.class, OnUpdate.class})
+    @Null(message = "{listeners}{null}", groups = {OnCreate.class, OnUpdate.class})
     private Integer listeners;
 
-    @Null(message = "{event.lectures.null}", groups = {OnCreate.class, OnUpdate.class})
+    @Null(message = "{lectures}{null}", groups = {OnCreate.class, OnUpdate.class})
     private Integer lectures;
 }

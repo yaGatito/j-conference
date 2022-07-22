@@ -9,7 +9,7 @@ import java.lang.annotation.*;
 @Target({ElementType.PARAMETER, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface EnumConstraint {
-    String message() default "EnumConstant doesn't exist";
+    String message() default "invalid enum";
 
     Class<? extends Enum> value();
 

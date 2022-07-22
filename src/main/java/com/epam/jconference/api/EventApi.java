@@ -39,7 +39,7 @@ public interface EventApi {
     @ApiOperation("Get by id")
     @ResponseStatus(HttpStatus.OK)
     @GetMapping(value = "/{id}")
-    EventDto getById(@PathVariable @Positive Long id);
+    EventDto getById(@PathVariable @Positive(message = "{id}{invalid}") Long id);
 
     @ApiOperation("Update event properties")
     @ResponseStatus(HttpStatus.OK)
@@ -49,7 +49,7 @@ public interface EventApi {
     @ApiOperation("Delete by id")
     @ResponseStatus(HttpStatus.OK)
     @DeleteMapping("/{id}")
-    ResponseEntity<Void> deleteById(@PathVariable @Positive Long id);
+    ResponseEntity<Void> deleteById(@PathVariable @Positive(message = "{id}{invalid}") Long id);
 
     @ApiOperation("Show all participation of logged user")
     @ResponseStatus(HttpStatus.OK)
@@ -59,10 +59,10 @@ public interface EventApi {
     @ApiOperation("Join the event. User must be logged in.")
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/join/{eventId}")
-    ResponseEntity<Void> join(@PathVariable @Positive Long eventId);
+    ResponseEntity<Void> join(@PathVariable @Positive(message = "{id}{invalid}") Long eventId);
 
     @ApiOperation("Leave the event. User must be logged in.")
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/leave/{eventId}")
-    ResponseEntity<Void> leave(@PathVariable @Positive Long eventId);
+    ResponseEntity<Void> leave(@PathVariable @Positive(message = "{id}{invalid}") Long eventId);
 }

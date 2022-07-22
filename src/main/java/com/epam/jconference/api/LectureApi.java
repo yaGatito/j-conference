@@ -29,14 +29,14 @@ public interface LectureApi {
     @ApiOperation("Get lecture by id")
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/moder/{id}")
-    LectureDto findById(@PathVariable @Positive Long id);
+    LectureDto findById(@PathVariable @Positive(message = "{id}{invalid}") Long id);
 
 
     @ApiOperation("Get all lectures by specified status")
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/moder/status/{status}")
     List<LectureDto> getLecturesForModer(
-            @PathVariable @EnumConstraint(LectureStatus.class) String status
+            @PathVariable @EnumConstraint(message = "{status}{not_exist}", value = LectureStatus.class) String status
     );
 
     @ApiOperation("Assign speaker to free lecture")
@@ -54,19 +54,19 @@ public interface LectureApi {
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/moder/free/assign")
     LectureDto assignSpeakerForFreeLecture(
-            @RequestParam("speaker") @Positive Long speakerId,
-            @RequestParam("free_lecture") @Positive Long lectureId
+            @RequestParam("speaker") @Positive(message = "{id}{invalid}") Long speakerId,
+            @RequestParam("free_lecture") @Positive(message = "{id}{invalid}") Long lectureId
     );
 
     @ApiOperation("Reject request")
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/moder/requests/reject/{id}")
-    LectureDto rejectRequest(@PathVariable("id") @Positive Long requestId);
+    LectureDto rejectRequest(@PathVariable("id") @Positive(message = "{id}{invalid}") Long requestId);
 
     @ApiOperation("Accept request")
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/moder/requests/accept/{id}")
-    LectureDto acceptRequest(@PathVariable("id") @Positive Long requestId);
+    LectureDto acceptRequest(@PathVariable("id") @Positive(message = "{id}{invalid}") Long requestId);
 
     @ApiOperation("Requests history")
     @ResponseStatus(HttpStatus.OK)
@@ -77,26 +77,26 @@ public interface LectureApi {
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/speaker/status/{status}")
     List<LectureDto> getLecturesForSpeaker(
-            @PathVariable @EnumConstraint(LectureStatus.class) String status
+            @PathVariable @EnumConstraint(message = "{status}{not_exist}", value = LectureStatus.class) String status
     );
 
     @ApiOperation("Create request for securing a free lecture. Must be /login")
     @ApiImplicitParam(name = "lectureId", type = "path", required = true, value = "Id of lecture")
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/speaker/free/{lectureId}")
-    LectureDto applyFreeLecture(@PathVariable @Positive Long lectureId);
+    LectureDto applyFreeLecture(@PathVariable @Positive(message = "{id}{invalid}") Long lectureId);
 
     @ApiOperation("Accept offer from moder. Must be /login")
     @ApiImplicitParam(name = "lectureId", type = "path", required = true, value = "Id of lecture")
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/speaker/offers/accept/{lectureId}")
-    LectureDto acceptOffer(@PathVariable @Positive Long lectureId);
+    LectureDto acceptOffer(@PathVariable @Positive(message = "{id}{invalid}") Long lectureId);
 
     @ApiOperation("Reject offer from moder. Must be /login")
     @ApiImplicitParam(name = "lectureId", type = "path", required = true, value = "Id of lecture")
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/speaker/offers/reject/{lectureId}")
-    LectureDto rejectOffer(@PathVariable @Positive Long lectureId);
+    LectureDto rejectOffer(@PathVariable @Positive(message = "{id}{invalid}") Long lectureId);
 
     @ApiOperation("Create request for giving a lecture in defined event. Must be /login")
     @ResponseStatus(HttpStatus.CREATED)

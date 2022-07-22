@@ -25,12 +25,12 @@ public interface TagApi {
     @ApiOperation("Get tag by id")
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    TagDto getById(@PathVariable @Positive Long id);
+    TagDto getById(@PathVariable @Positive(message = "{id}{invalid}") Long id);
 
     @ApiOperation("Delete tag by id")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    ResponseEntity<Void> deleteById(@PathVariable @Positive Long id);
+    ResponseEntity<Void> deleteById(@PathVariable @Positive(message = "{id}{invalid}") Long id);
 
     @ApiOperation("Get all tags")
     @GetMapping

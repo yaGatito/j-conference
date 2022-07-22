@@ -39,12 +39,17 @@ public interface UserApi {
             value = "User id")})
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/{email}")
-    UserModel getByEmail(@PathVariable @Email String email);
+    UserModel getByEmail(@PathVariable @Email(message = "{email}{invalid}") String email);
 
     @ApiOperation("Get all users by role")
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/role/{role}")
-    List<UserDto> getAllByRole(@PathVariable @EnumConstraint(UserRole.class) String role);
+    List<UserDto> getAllByRole(
+            @PathVariable @EnumConstraint(
+                    message = "{role}{not_exist}",
+                    value = UserRole.class)
+            String role
+    );
 
     @ApiOperation("Login user")
     @ResponseStatus(HttpStatus.OK)
@@ -76,6 +81,14 @@ public interface UserApi {
     })
     @ResponseStatus(HttpStatus.OK)
     @PatchMapping("/role")
-    UserModel setUserRole(@RequestParam("role") @EnumConstraint(UserRole.class) String role,
-                          @RequestParam("email") @Email String email);
+    UserModel setUserRole(
+            @RequestParam("role")
+            @EnumConstraint(
+                    message = "{role}{not_exist}",
+                    value = UserRole.class)
+            String role,
+            @RequestParam("email")
+            @Email(message = "{email}{invalid}")
+            String email
+    );
 }
