@@ -1,0 +1,38 @@
+server:
+  port: 8078
+
+spring:
+  datasource:
+    embedded-database-connection: h2
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:prodDb
+#    driver-class-name: org.postgresql.Driver
+#    name: jConferenceDB
+#    username: spring_conference_user
+#    password: root
+#    url: jdbc:postgresql://localhost:5432/jconferences
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    database: h2
+
+management:
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+info:
+  app:
+    name: jConference Spring Boot application
+    description: This application is designed to help manage events.
+    version: 1.0.0
+  system:
+    os: ${os.name}
+    PID: ${PID}
+    user-country: ${user.country}
+    user-timezone: ${user.timezone}
