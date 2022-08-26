@@ -1,50 +1,52 @@
 package com.epam.jconference.controller;
 
-import com.epam.jconference.controller.dto.EventDto;
-import com.epam.jconference.controller.dto.EventFilterDto;
-import com.epam.jconference.service.model.Event;
+import com.epam.jconference.api.EventApi;
+import com.epam.jconference.dto.EventDto;
+import com.epam.jconference.dto.EventPagingSortingFilterDto;
+import com.epam.jconference.service.EventService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @Slf4j
 @RestController
-public class EventController {
-    @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/events")
-    public EventDto create(@RequestBody EventDto eventDto) {
-        return null;
+@RequiredArgsConstructor
+public class EventController implements EventApi {
+
+    private final EventService eventService;
+
+    public EventDto create(EventDto eventDto) {
+        return eventService.create(eventDto);
     }
 
-    @GetMapping("/events")
-    public List<EventDto> findAll(@RequestBody EventFilterDto eventFilter) {
-        return null;
+    public List<EventDto> getAll(EventPagingSortingFilterDto eventFilter) {
+        return eventService.getAll(eventFilter);
     }
 
-    @GetMapping("/events/{id}")
-    public EventDto findById(@PathVariable Long id) {
-        return null;
+    public EventDto getById(Long id) {
+        return eventService.getById(id);
     }
 
-    @PatchMapping("/events")
-    public EventDto update(@RequestBody EventDto eventDto) {
-        return null;
+    public EventDto update(EventDto eventDto) {
+        return eventService.update(eventDto);
     }
 
-    @DeleteMapping("/events")
-    public EventDto delete(@RequestBody EventDto eventDto) {
-        return null;
+    public ResponseEntity<Void> deleteById(Long id) {
+        return eventService.deleteById(id);
     }
 
-    @PatchMapping("/events/{id}")
-    public EventDto deleteById(@PathVariable Long id) {
-        return null;
+    public List<EventDto> participation() {
+        return eventService.participation();
     }
 
-    @GetMapping("/events/participation")
-    public List<Event> participation() {
-        return null;
+    public ResponseEntity<Void> join(Long eventId) {
+        return eventService.join(eventId);
+    }
+
+    public ResponseEntity<Void> leave(Long eventId) {
+        return eventService.leave(eventId);
     }
 }

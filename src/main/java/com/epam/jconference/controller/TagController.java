@@ -1,37 +1,36 @@
 package com.epam.jconference.controller;
 
-import com.epam.jconference.service.model.Tag;
+import com.epam.jconference.api.TagApi;
+import com.epam.jconference.dto.TagDto;
+import com.epam.jconference.service.TagService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @Slf4j
+@RequiredArgsConstructor
 @RestController
-public class TagController {
-    @PostMapping("/tags")
-    public Tag create(Tag tag) {
-        return null;
+public class TagController implements TagApi {
+
+    private final TagService tagService;
+
+    public TagDto create(TagDto tag) {
+        return tagService.create(tag);
     }
 
-    @GetMapping("/tags")
-    public List<Tag> findAll() {
-        return null;
+    public TagDto getById(Long id) {
+        return tagService.getById(id);
     }
 
-    @GetMapping("/tags/{id}")
-    public List<Tag> findById(@PathVariable Long id) {
-        return null;
+    @Override
+    public ResponseEntity<Void> deleteById(Long id) {
+        return tagService.deleteById(id);
     }
 
-    @PatchMapping("/tags")
-    public Tag update(Tag tag) {
-        return null;
+    public List<TagDto> findAll() {
+        return tagService.findAll();
     }
-
-    @DeleteMapping("/tags")
-    public Tag delete(Tag tag) {
-        return null;
-    }
-
 }
