@@ -5,17 +5,14 @@ spring:
   datasource:
     driver-class-name: org.postgresql.Driver
     name: jConferenceDB
-    username: spring_conference_user
-    password: root
-    url: jdbc:postgresql://localhost:5432/jconferences
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
+    url: ${DATABASE_URL}
   jpa:
     show-sql: true
     hibernate:
       ddl-auto: update
     database: postgresql
-#  jackson:
-#    serialization:
-#      fail-on-empty-beans: false
 
 management:
   endpoint:

@@ -1,17 +1,18 @@
 package com.epam.jconference.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Objects;
 
-@Data
+@Getter
+@Setter
+@ToString
 @Builder
 @Entity
 @AllArgsConstructor
@@ -34,9 +35,27 @@ public class Event {
     private LocalDate date;
 
     @ManyToMany(fetch = FetchType.LAZY)
+    @ToString.Exclude
     private List<Tag> tags;
 
     private Integer lectures;
 
     private Integer listeners;
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
+            return false;
+        }
+        Event event = (Event) o;
+        return id != null && Objects.equals(id, event.id);
+    }
 }

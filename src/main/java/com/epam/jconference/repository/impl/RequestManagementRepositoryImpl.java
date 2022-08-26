@@ -17,12 +17,15 @@ public class RequestManagementRepositoryImpl implements RequestManagementReposit
 
     @Transactional
     public void assignSpeakerOnFreeLecture(Long speaker, Long lecture) {
-        jdbcTemplate.update("update free_requests set status = 0 where free_lecture_id = ? and speaker_id != ?;", lecture, speaker);
-        jdbcTemplate.update("update free_requests set status = 2 where free_lecture_id = ? and speaker_id = ?;", lecture, speaker);
+        jdbcTemplate.update("update free_requests set status = 0 where free_lecture_id = ? and " +
+                "speaker_id != ?;", lecture, speaker);
+        jdbcTemplate.update("update free_requests set status = 2 where free_lecture_id = ? and " +
+                "speaker_id = ?;", lecture, speaker);
     }
 
     public void applyOnFreeLecture(Long speaker, Long lecture) {
-        jdbcTemplate.update("insert into free_requests (status, free_lecture_id, speaker_id) VALUES (1, ?, ?);", lecture, speaker);
+        jdbcTemplate.update("insert into free_requests (status, free_lecture_id, speaker_id) " +
+                "VALUES (1, ?, ?);", lecture, speaker);
     }
 
     public List<Long> appliedFreeLectures(Long speakerId) {
@@ -30,9 +33,22 @@ public class RequestManagementRepositoryImpl implements RequestManagementReposit
                 rs -> {
                     List<Long> ids = new ArrayList<>();
                     while (rs.next()) {
-                        ids.add((long)rs.getInt(1));
+                        ids.add((long) rs.getInt(1));
                     }
                     return ids;
+                });
+    }
+
+    @Override
+    public boolean existsApplicationOnFreeLecture(Long speakerId, Long lectureId) {
+        return jdbcTemplate.query(String.format("select count(*) from free_requests where free_lecture_id = %d and " +
+                        "speaker_id = %d;", lectureId, speakerId),
+                rs -> {
+                    int count = 0;
+                    while (rs.next()) {
+                        count = rs.getInt(1);
+                    }
+                    return count >= 1;
                 });
     }
 }

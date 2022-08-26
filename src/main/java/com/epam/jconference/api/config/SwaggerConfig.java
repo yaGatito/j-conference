@@ -21,7 +21,12 @@ public class SwaggerConfig {
 
     @Bean
     public Docket apiV1() {
-        return new Docket(DocumentationType.SWAGGER_2).groupName("api-v1").select().apis(RequestHandlerSelectors.basePackage("com.epam.jconference.controller")).paths(PathSelectors.ant("/api/v1/**")).build();
+        return new Docket(DocumentationType.SWAGGER_2)
+                .groupName("api-v1")
+                .select()
+                .apis(RequestHandlerSelectors.basePackage("com.epam.jconference.controller"))
+                .paths(PathSelectors.ant("/api/v1/**"))
+                .build();
     }
 
     @Bean

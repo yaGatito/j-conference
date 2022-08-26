@@ -2,13 +2,13 @@ package com.epam.jconference.repository.impl;
 
 import com.epam.jconference.model.EventListener;
 import com.epam.jconference.repository.EventListenerRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
-@Repository
+@Component
 public class EventListenerRepositoryImpl implements EventListenerRepository {
 
     @PersistenceContext

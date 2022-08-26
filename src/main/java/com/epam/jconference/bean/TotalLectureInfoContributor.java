@@ -19,7 +19,9 @@ public class TotalLectureInfoContributor implements InfoContributor {
 
     @Override
     public void contribute(Info.Builder builder) {
-        Map<Long, String> lecturesInfo = lectureRepository.findAllByStatus(LectureStatus.SECURED).stream().collect(Collectors.toMap(Lecture::getId, Lecture::getTopic));
+        Map<Long, String> lecturesInfo = lectureRepository.findAllByStatus(LectureStatus.SECURED)
+                .stream()
+                .collect(Collectors.toMap(Lecture::getId, Lecture::getTopic));
         builder.withDetail("lectures", lecturesInfo);
     }
 }

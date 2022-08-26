@@ -1,16 +1,20 @@
 package com.epam.jconference.model;
 
 import com.epam.jconference.model.enums.RequestStatus;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Objects;
 
-@Data
-@Entity(name = "free_requests")
+@Getter
+@Setter
+@ToString
+@Entity(name = "RequestOnFreeLecture")
+@AllArgsConstructor
 @NoArgsConstructor
-@Table(uniqueConstraints = {
+@Table(name = "free_requests", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"speaker_id", "free_lecture_id"})
 })
 public class RequestOnFreeLecture implements Serializable {
@@ -24,4 +28,21 @@ public class RequestOnFreeLecture implements Serializable {
     private Lecture freeLecture;
 
     private RequestStatus status;
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
+            return false;
+        }
+        RequestOnFreeLecture that = (RequestOnFreeLecture) o;
+        return speaker != null && Objects.equals(speaker, that.speaker);
+    }
 }

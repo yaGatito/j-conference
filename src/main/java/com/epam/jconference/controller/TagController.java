@@ -5,10 +5,10 @@ import com.epam.jconference.dto.TagDto;
 import com.epam.jconference.service.TagService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -25,15 +25,12 @@ public class TagController implements TagApi {
         return tagService.getById(id);
     }
 
+    @Override
+    public ResponseEntity<Void> deleteById(Long id) {
+        return tagService.deleteById(id);
+    }
+
     public List<TagDto> findAll() {
         return tagService.findAll();
-    }
-
-    public TagDto addTranslations(Long id, Map<String, String> translations) {
-        return tagService.addTranslations(id, translations);
-    }
-
-    public List<TagDto> findAllById(List<Long> ids) {
-        return tagService.findAllByID(ids);
     }
 }

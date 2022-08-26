@@ -2,16 +2,17 @@ package com.epam.jconference.model;
 
 import com.epam.jconference.model.enums.LectureStatus;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Builder
-@Data
+@Getter
+@Setter
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 @NamedQuery(name = "Lecture.existsFreeLecture",
@@ -35,11 +36,30 @@ public class Lecture {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonBackReference
+    @ToString.Exclude
     private Event event;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @ToString.Exclude
     private User speaker;
 
     @Transient
     private String info;
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
+            return false;
+        }
+        Lecture lecture = (Lecture) o;
+        return id != null && Objects.equals(id, lecture.id);
+    }
 }

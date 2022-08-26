@@ -7,12 +7,11 @@ import com.epam.jconference.exception.EntityNotFoundException;
 import com.epam.jconference.exception.InvalidOperationException;
 import com.epam.jconference.exception.UnauthorizedAccessException;
 import com.epam.jconference.mapper.EventMapper;
+import com.epam.jconference.mapper.TagMapper;
 import com.epam.jconference.model.Event;
 import com.epam.jconference.model.EventListener;
-import com.epam.jconference.model.Tag;
 import com.epam.jconference.model.User;
 import com.epam.jconference.repository.EventRepository;
-import com.epam.jconference.repository.TagRepository;
 import com.epam.jconference.repository.impl.EventListenerRepositoryImpl;
 import com.epam.jconference.service.EventService;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +21,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -32,7 +32,6 @@ import java.util.stream.Collectors;
 public class EventServiceImpl implements EventService {
 
     private final EventRepository eventRepository;
-    private final TagRepository tagJpaRepository;
     private final Session session;
     private final EventListenerRepositoryImpl eventListenerRepository;
 
@@ -40,9 +39,11 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public EventDto create(EventDto eventDto) {
-        List<Tag> persistedTags = tagJpaRepository.findAllById(() -> eventDto.getTags().stream().map(Tag::getId).collect(Collectors.toList()).iterator());
+        if (eventDto.getStartTime().isAfter(eventDto.getEndTime())) {
+            throw new InvalidOperationException("End time can't be before start time");
+        }
         Event event = mapper.mapToEntity(eventDto);
-        event.setTags(persistedTags);
+        event.setTags(eventDto.getTags().stream().map(TagMapper.INSTANCE::mapToEntity).collect(Collectors.toList()));
         event.setListeners(0);
         event.setLectures(0);
         return mapper.mapToDto(eventRepository.save(event));
@@ -55,8 +56,18 @@ public class EventServiceImpl implements EventService {
             sort = sort.descending();
         }
         Pageable pageable = PageRequest.of(filterDto.getPage(), filterDto.NUMBER_OF_ELEMENTS, sort);
+        Boolean futureEvents = filterDto.getFutureEvents();
 
-        return eventRepository.findAll(pageable).stream().map(mapper::mapToDto).collect(Collectors.toList());
+        List<Event> persistedEntities;
+        if (Objects.isNull(futureEvents)) {
+            persistedEntities = eventRepository.findAll(pageable).getContent();
+        } else if (futureEvents) {
+            persistedEntities = eventRepository.findAllByDateAfter(LocalDate.now(), pageable);
+        } else {
+            persistedEntities = eventRepository.findAllByDateBefore(LocalDate.now(), pageable);
+        }
+
+        return persistedEntities.stream().map(mapper::mapToDto).collect(Collectors.toList());
     }
 
     @Override
@@ -68,7 +79,12 @@ public class EventServiceImpl implements EventService {
     public EventDto update(EventDto eventDto) {
         Long id = eventDto.getId();
         if (eventRepository.existsById(id)) {
-            return mapper.mapToDto(eventRepository.save(mapper.mapToEntity(eventDto)));
+            Event persistedEvent = eventRepository.getById(id);
+            mapper.updateFieldsForEvent(eventDto, persistedEvent);
+            if (persistedEvent.getStartTime().isAfter(persistedEvent.getEndTime())) {
+                throw new InvalidOperationException("End time can't be before start time");
+            }
+            return mapper.mapToDto(eventRepository.save(persistedEvent));
         } else {
             throw new EntityNotFoundException("Event with ID: " + id + " doesn't exist");
         }
@@ -86,7 +102,8 @@ public class EventServiceImpl implements EventService {
     @Override
     public List<EventDto> participation() {
         if (Objects.nonNull(session.getUser())) {
-            return eventRepository.participation(session.getUser()).stream().map(mapper::mapToDto).collect(Collectors.toList());
+            return eventRepository.participation(session.getUser()).stream().map(mapper::mapToDto)
+                    .collect(Collectors.toList());
         } else {
             throw new UnauthorizedAccessException("User must be logged in");
         }
@@ -94,6 +111,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public ResponseEntity<Void> join(Long eventId) {
+        session.isLogged();
         User authUser = session.getUser();
         EventDto eventDto = getById(eventId);
         Event persistedEvent = mapper.mapToEntity(eventDto);
@@ -109,6 +127,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public ResponseEntity<Void> leave(Long eventId) {
+        session.isLogged();
         User authUser = session.getUser();
         EventDto eventDto = getById(eventId);
         Event persistedEvent = mapper.mapToEntity(eventDto);
