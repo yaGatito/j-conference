@@ -1,10 +1,10 @@
 package com.epam.jconference.controller.assembler;
 
+import com.epam.jconference.controller.EventController;
 import com.epam.jconference.controller.UserController;
 import com.epam.jconference.controller.model.UserModel;
 import com.epam.jconference.dto.UserDto;
 import org.springframework.hateoas.Link;
-import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
@@ -30,14 +30,15 @@ public class UserAssembler extends RepresentationModelAssemblerSupport<UserDto, 
     public UserModel toModel(UserDto entity) {
         UserModel userModel = new UserModel(entity);
 
-        Link get = linkTo(methodOn(UserController.class).getById(entity.getId())).withRel(GET_REL).withType(HttpMethod.GET.toString());
+        Link participation = linkTo(methodOn(EventController.class).participation()).withRel("participation");
+        Link get = linkTo(methodOn(UserController.class).getByEmail(entity.getEmail())).withRel(GET_REL).withType(HttpMethod.GET.toString());
         Link create = linkTo(methodOn(UserController.class).create(entity)).withRel(CREATE_REL).withType(HttpMethod.POST.toString());
         Link update = linkTo(methodOn(UserController.class).update(entity)).withRel(UPDATE_REL).withType(HttpMethod.PUT.toString());
         Link login = linkTo(methodOn(UserController.class).login(entity)).withRel(LOGIN_REL).withType(HttpMethod.POST.toString());
         Link logout = linkTo(methodOn(UserController.class).logout()).withRel(LOGOUT_REL).withType(HttpMethod.POST.toString());
         Link profile = linkTo(methodOn(UserController.class).profile()).withRel(PROFILE_REL).withType(HttpMethod.GET.toString());
 
-        userModel.add(get, create, update, login, logout, profile);
+        userModel.add(get, create, update, login, logout, profile, participation);
         return userModel;
     }
 }

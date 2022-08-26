@@ -1,8 +1,10 @@
 package com.epam.jconference.service;
 
 import com.epam.jconference.dto.UserDto;
-import com.epam.jconference.model.User;
+import com.epam.jconference.model.enums.UserRole;
 import org.springframework.http.ResponseEntity;
+
+import java.util.List;
 
 public interface UserService {
     UserDto create(UserDto user);
@@ -15,5 +17,9 @@ public interface UserService {
 
     UserDto profile();
 
-    UserDto getById(Long id);
+    UserDto getByEmail(String email);
+
+    UserDto setUserRole(UserRole role, String email);
+
+    List<UserDto> getAllByRole(UserRole role);
 }

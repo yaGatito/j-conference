@@ -1,41 +1,61 @@
 package com.epam.jconference.model;
 
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.*;
+import org.hibernate.Hibernate;
 
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
 
-@Data
+@Getter
+@Setter
+@ToString
+@Builder
+@Entity
+@AllArgsConstructor
+@NoArgsConstructor
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Event {
-    private Long id;
-    private String topic;
-    private List<Long> tags;
-    private LocalTime startTime;
-    private LocalTime endTime;
-    private LocalDate date;
-    private List<Long> lectures;
-    private List<Long> listeners;
 
-    /**
-     * Returns an array. First element of which contains only past events.
-     * Second element of which contains today and future events.
-     *
-     * @param events list which will be filtered to past and future
-     * @return array
-     */
-    public static List<Event>[] filter(List<Event> events) {
-        List<Event> past = new ArrayList<>();
-        List<Event> future = new ArrayList<>();
-        LocalDate today = LocalDate.now();
-        LocalTime timeNow = LocalTime.of(LocalTime.now().getHour(), LocalTime.now().getMinute());
-        for (Event event : events) {
-            if (event.getDate().compareTo(today) > 0 || (event.getDate().compareTo(today) == 0 && event.getStartTime().compareTo(timeNow) >= 0)) {
-                future.add(event);
-            } else {
-                past.add(event);
-            }
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String topic;
+
+    private String location;
+
+    private LocalTime startTime;
+
+    private LocalTime endTime;
+
+    private LocalDate date;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @ToString.Exclude
+    private List<Tag> tags;
+
+    private Integer lectures;
+
+    private Integer listeners;
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
         }
-        return new List[]{past, future};
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
+            return false;
+        }
+        Event event = (Event) o;
+        return id != null && Objects.equals(id, event.id);
     }
 }

@@ -1,17 +1,15 @@
 package com.epam.jconference.service;
 
 import com.epam.jconference.dto.EventDto;
-import com.epam.jconference.dto.EventFilterDto;
-import com.epam.jconference.model.Event;
+import com.epam.jconference.dto.EventPagingSortingFilterDto;
 import org.springframework.http.ResponseEntity;
 
-import java.util.Collection;
 import java.util.List;
 
 public interface EventService {
     EventDto create(EventDto eventDto);
 
-    List<EventDto> getAll(EventFilterDto eventFilterDto);
+    List<EventDto> getAll(EventPagingSortingFilterDto eventFilterDto);
 
     EventDto getById(Long id);
 

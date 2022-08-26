@@ -1,13 +1,11 @@
 package com.epam.jconference.service;
 
 import com.epam.jconference.dto.LectureDto;
-import com.epam.jconference.model.Lecture;
-import org.springframework.http.ResponseEntity;
+import com.epam.jconference.model.enums.LectureStatus;
 
 import java.util.List;
 
 public interface LectureService {
-    //-----MODER SECTION-------
     LectureDto create(LectureDto lecture);
 
     LectureDto getById(Long id);
@@ -20,19 +18,11 @@ public interface LectureService {
 
     List<LectureDto> moderHistory();
 
-    //MIXED ACCESS
-    List<LectureDto> getFreeLectures();
-
-    //SPEAKER SECTION
-    List<LectureDto> getSecuredLectures();
-
-    List<LectureDto> getOffers();
+    List<LectureDto> getLectures(LectureStatus status, Boolean isModerAccess);
 
     LectureDto acceptOffer(Long lectureId);
 
-    LectureDto declineOffer(Long lectureId);
-
-    List<LectureDto> getRequests();
+    LectureDto rejectOffer(Long lectureId);
 
     LectureDto addRequest(LectureDto lectureDto);
 
